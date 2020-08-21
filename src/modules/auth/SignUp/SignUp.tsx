@@ -14,9 +14,9 @@ import { Form } from "@unform/mobile";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
 
-import logoImg from "../../assets/logo.png";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
+import logoImg from "../../../assets/logo.png";
+import Button from "../../../components/Button/Button";
+import Input from "../../../components/Input/Input";
 
 import {
   Container,
@@ -24,8 +24,8 @@ import {
   BackToSignInButton,
   BackToSignInButtonText,
 } from "./styles";
-import getValidationErrors from "../../utils/getValidationErrors";
-import api from "../../services/api";
+import getValidationErrors from "../../../utils/getValidationErrors";
+import api from "../../../services/api";
 
 interface SignUpFormData {
   name: string;
@@ -56,7 +56,7 @@ const SignUp: React.FC = () => {
       await api.post("users", data);
       Alert.alert(
         "Cadastro realizado com sucesso",
-        "Você já pode fazer login no GoBarber"
+        "Você já pode fazer login no GoBarber",
       );
       navigation.goBack();
     } catch (error) {
@@ -67,7 +67,7 @@ const SignUp: React.FC = () => {
       }
       Alert.alert(
         "Erro no Cadastro",
-        "Ocorreu um erro ao fazer cadastro, tente novamente."
+        "Ocorreu um erro ao fazer cadastro, tente novamente.",
       );
     }
   }, []);

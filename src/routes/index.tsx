@@ -1,13 +1,19 @@
 import React from "react";
+import { ActivityIndicator, View } from "react-native";
+import { useFonts } from "expo-font";
 import AuthRoutes from "./auth.routes";
 import AppRoutes from "./app.routes";
 import { useAuth } from "../context/authContext";
-import { ActivityIndicator, View } from "react-native";
 
 const Routes: React.FC = () => {
   const { user, loading } = useAuth();
 
-  if (loading) {
+  const [fontLoaded] = useFonts({
+    "RobotoSlab-Regular": require("../../assets/fonts/RobotoSlab-Regular.ttf"),
+    "RobotoSlab-Medium": require("../../assets/fonts/RobotoSlab-Medium.ttf"),
+  });
+
+  if (loading || !fontLoaded) {
     return (
       <View
         style={{

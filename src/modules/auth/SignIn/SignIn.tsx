@@ -14,9 +14,9 @@ import { Form } from "@unform/mobile";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
 
-import logoImg from "../../assets/logo.png";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
+import logoImg from "../../../assets/logo.png";
+import Button from "../../../components/Button/Button";
+import Input from "../../../components/Input/Input";
 
 import {
   Container,
@@ -26,8 +26,8 @@ import {
   CreateAccountButton,
   CreateAccountButtonText,
 } from "./styles";
-import getValidationErrors from "../../utils/getValidationErrors";
-import { useAuth } from "../../context/authContext";
+import getValidationErrors from "../../../utils/getValidationErrors";
+import { useAuth } from "../../../context/authContext";
 
 interface SignInFormData {
   email: string;
@@ -56,7 +56,6 @@ const SignIn: React.FC = () => {
         await schema.validate(data, { abortEarly: false });
 
         await signIn({ email: data.email, password: data.password });
-        Alert.alert("Logou");
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
@@ -66,11 +65,11 @@ const SignIn: React.FC = () => {
 
         Alert.alert(
           "Erro na autenticação",
-          "Ocorreu um erro ao fazer login, cheque as credenciais."
+          "Ocorreu um erro ao fazer login, cheque as credenciais.",
         );
       }
     },
-    [signIn]
+    [signIn],
   );
 
   return (
@@ -91,7 +90,14 @@ const SignIn: React.FC = () => {
               <Title>Faça seu logon</Title>
             </View>
 
-            <Form ref={formRef} onSubmit={handleSignIn}>
+            <Form
+              ref={formRef}
+              onSubmit={handleSignIn}
+              initialData={{
+                email: "gabriel_alencar2@hotmail.com",
+                password: "123456",
+              }}
+            >
               <Input
                 name="email"
                 icon="mail"

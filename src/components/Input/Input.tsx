@@ -26,7 +26,7 @@ interface InputRef {
 
 const Input: React.RefForwardingComponent<InputRef, InputProps> = (
   { name, icon, ...rest },
-  ref
+  ref,
 ) => {
   const inputElementRef = useRef<any>(null);
 
