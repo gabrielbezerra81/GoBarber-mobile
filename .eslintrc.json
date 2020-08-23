@@ -38,7 +38,11 @@
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "object-curly-newline": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": "off",
+    "implicit-arrow-linebreak": "off",
+    "operator-linebreak": "off",
+    "react/jsx-one-expression-per-line": "off"
   },
   "globals": {
     "__DEV__": "readonly"

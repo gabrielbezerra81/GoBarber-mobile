@@ -38,7 +38,11 @@ export const UserAvatar = styled.Image`
   border-radius: 28px;
 `;
 
-export const ProvidersList = styled(FlatList as new () => FlatList<Provider>)`
+export const ProvidersList = styled(
+  FlatList as new () => FlatList<Provider>,
+).attrs({
+  contentContainerStyle: { paddingBottom: 50 },
+})`
   padding: 32px 24px 16px;
 `;
 
@@ -49,7 +53,7 @@ export const ProvidersListTitle = styled.Text`
   font-family: ${fonts.medium};
 `;
 
-export const ProviderContainer = styled(RectButton)`
+export const ProviderContainer = styled.TouchableOpacity`
   background: #3e3b47;
   border-radius: 10px;
   padding: 20px;

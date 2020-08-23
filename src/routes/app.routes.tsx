@@ -18,7 +18,6 @@ const AppRoutes = () => (
     <App.Screen name="Dashboard" component={Dashboard} />
     <App.Screen name="CreateAppointment" component={CreateAppointment} />
     <App.Screen name="AppointmentCreated" component={AppointmentCreated} />
-
     <App.Screen name="Profile" component={Profile} />
   </App.Navigator>
 );

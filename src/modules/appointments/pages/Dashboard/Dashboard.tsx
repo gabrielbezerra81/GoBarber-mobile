@@ -30,15 +30,14 @@ export interface Provider {
 }
 
 const Dashboard: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   const navigation = useNavigation();
 
   const [providers, setProviders] = useState<Provider[]>([]);
 
   const navigateToProfile = useCallback(() => {
-    // navigation.navigate("Profile");
-    signOut();
+    navigation.navigate("Profile");
   }, [navigation]);
 
   const navigateToCreateAppointment = useCallback(
@@ -52,7 +51,6 @@ const Dashboard: React.FC = () => {
     api
       .get<Provider[]>("providers")
       .then((response) => {
-        console.log(response.data);
         setProviders(response.data);
       })
       .catch(console.log);
@@ -84,7 +82,10 @@ const Dashboard: React.FC = () => {
         }
         renderItem={({ item: provider }) => (
           <ProviderContainer
-            onPress={() => navigateToCreateAppointment(provider.id)}
+            activeOpacity={0.6}
+            onPress={() => {
+              navigateToCreateAppointment(provider.id);
+            }}
           >
             <ProviderAvatar
               source={
