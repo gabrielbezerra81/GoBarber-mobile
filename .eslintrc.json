@@ -45,7 +45,9 @@
     "operator-linebreak": "off",
     "react/jsx-one-expression-per-line": "off",
     "no-useless-return": "off",
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "no-param-reassign": "off",
+    "function-paren-newline": "off"
   },
   "globals": {
     "__DEV__": "readonly"

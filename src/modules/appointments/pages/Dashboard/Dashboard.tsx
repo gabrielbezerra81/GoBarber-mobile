@@ -53,7 +53,9 @@ const Dashboard: React.FC = () => {
       .then((response) => {
         setProviders(response.data);
       })
-      .catch(console.log);
+      .catch((err) => {
+        console.log(err.response);
+      });
   }, []);
 
   return (
