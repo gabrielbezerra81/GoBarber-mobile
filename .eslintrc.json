@@ -1,6 +1,7 @@
 {
   "env": {
-    "es2020": true
+    "es2020": true,
+    "browser": true
   },
   "extends": [
     "plugin:react/recommended",
@@ -42,7 +43,8 @@
     "no-console": "off",
     "implicit-arrow-linebreak": "off",
     "operator-linebreak": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "react/jsx-one-expression-per-line": "off",
+    "no-useless-return": "off"
   },
   "globals": {
     "__DEV__": "readonly"

@@ -61,5 +61,13 @@
 		<string>RobotoSlab-Regular.ttf</string>
 		<string>Feather.ttf</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Give $(PRODUCT_NAME) permission to save photos</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Give $(PRODUCT_NAME) permission to take photos</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Give $(PRODUCT_NAME) permission to record audio</string>
 </dict>
 </plist>

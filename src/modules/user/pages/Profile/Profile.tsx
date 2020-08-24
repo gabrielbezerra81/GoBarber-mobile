@@ -1,16 +1,28 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  View,
   Alert,
   TextInput,
+  Text,
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import { Form } from "@unform/mobile";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
+
+// import ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
+
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+  withMenuContext,
+  MenuContextProps,
+} from "react-native-popup-menu";
 
 import Button from "../../../../components/Button/Button";
 import Input from "../../../../components/Input/Input";
@@ -21,6 +33,9 @@ import {
   Title,
   UserAvatarButton,
   UserAvatar,
+  Header,
+  SignOutButton,
+  AvatarIconContainer,
 } from "./styles";
 import getValidationErrors from "../../../../utils/getValidationErrors";
 import api from "../../../../services/api";
@@ -36,7 +51,16 @@ interface ProfileFormData {
   password_confirmation: string;
 }
 
-const Profile: React.FC = () => {
+const pickerOptions: ImagePicker.ImagePickerOptions = {
+  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  allowsEditing: true,
+  aspect: [4, 5],
+  quality: 1,
+};
+
+type ProfileProps = MenuContextProps;
+
+const Profile: React.FC<ProfileProps> = ({ ctx }) => {
   const formRef = useRef<FormHandles>(null);
   const emailInputRef = useRef<TextInput>(null);
 
@@ -46,7 +70,7 @@ const Profile: React.FC = () => {
 
   const navigation = useNavigation();
 
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, signOut } = useAuth();
 
   const handleProfileUpdate = useCallback(
     async (data: ProfileFormData) => {
@@ -112,9 +136,68 @@ const Profile: React.FC = () => {
     [navigation, updateUser],
   );
 
+  const updateAvatarAPI = useCallback(
+    (uri: string) => {
+      const data = new FormData();
+
+      data.append("avatar", {
+        uri,
+        type: "image/jpeg",
+        name: `${user.id}.jpg`,
+      } as any);
+      api
+        .patch("users/avatar", data)
+        .then((apiResponse) => {
+          updateUser(apiResponse.data);
+        })
+        .catch(console.log);
+    },
+    [updateUser, user.id],
+  );
+
   const handleGoBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
+
+  const handleSignOut = useCallback(() => {
+    signOut();
+  }, [signOut]);
+
+  const handleAvatarUpdateFromGallery = useCallback(async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync(pickerOptions);
+      if (!result.cancelled) {
+        updateAvatarAPI(result.uri);
+      }
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [updateAvatarAPI]);
+
+  const handleAvatarUpdateFromCamera = useCallback(async () => {
+    try {
+      const result = await ImagePicker.launchCameraAsync(pickerOptions);
+      if (!result.cancelled) {
+        updateAvatarAPI(result.uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [updateAvatarAPI]);
+
+  useEffect(() => {
+    async function getPermission() {
+      if (Platform.OS === "ios") {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert("Precisamos de acesso a câmera para atualizar o avatar!");
+        }
+      }
+    }
+    getPermission();
+  }, []);
 
   return (
     <>
@@ -125,11 +208,21 @@ const Profile: React.FC = () => {
         contentContainerStyle={{ flex: 1, flexGrow: 1 }}
       >
         <Container keyboardShouldPersistTaps="handled">
-          <BackButton onPress={handleGoBack}>
-            <Icon name="chevron-left" size={24} color="#999591" />
-          </BackButton>
+          <Header>
+            <BackButton onPress={handleGoBack}>
+              <Icon name="chevron-left" size={24} color="#999591" />
+            </BackButton>
+            <Title>Meu perfil</Title>
+            <SignOutButton onPress={handleSignOut}>
+              <Icon name="power" size={24} color="#999591" />
+            </SignOutButton>
+          </Header>
 
-          <UserAvatarButton>
+          <UserAvatarButton
+            onPress={() => {
+              ctx?.menuActions.openMenu("imagePickerMenu");
+            }}
+          >
             <UserAvatar
               source={
                 user.avatar_url
@@ -137,11 +230,22 @@ const Profile: React.FC = () => {
                   : undefinedProfileImage
               }
             />
+            <AvatarIconContainer>
+              <Icon name="camera" size={24} color="#312E38" />
+            </AvatarIconContainer>
+            <Menu name="imagePickerMenu">
+              <MenuTrigger />
+              <MenuOptions>
+                <MenuOption onSelect={handleAvatarUpdateFromCamera}>
+                  <Text>Tirar uma foto</Text>
+                </MenuOption>
+                <MenuOption onSelect={handleAvatarUpdateFromGallery}>
+                  <Text>Escolher da galeria</Text>
+                </MenuOption>
+                <MenuOption text="Cancelar" />
+              </MenuOptions>
+            </Menu>
           </UserAvatarButton>
-
-          <View>
-            <Title>Meu perfil</Title>
-          </View>
 
           <Form
             initialData={{ name: user.name, email: user.email }}
@@ -221,4 +325,20 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default withMenuContext(Profile);
+
+const ImagePickerMenu = () => (
+  <Menu name="imagePickerMenu">
+    <MenuOptions>
+      <MenuOption onSelect={() => alert("Save")} text="Save" />
+      <MenuOption onSelect={() => alert("Delete")}>
+        <Text style={{ color: "red" }}>Delete</Text>
+      </MenuOption>
+      <MenuOption
+        onSelect={() => alert("Not called")}
+        disabled
+        text="Disabled"
+      />
+    </MenuOptions>
+  </Menu>
+);

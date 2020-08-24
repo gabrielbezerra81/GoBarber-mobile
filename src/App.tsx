@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import { MenuProvider } from "react-native-popup-menu";
 import RNAsyncStorageFlipper from "rn-async-storage-flipper";
 import AsyncStorage from "@react-native-community/async-storage";
 import React from "react";
@@ -13,7 +14,9 @@ const App: React.FC = () => (
   <NavigationContainer>
     <StatusBar barStyle="light-content" backgroundColor="#312E38" translucent />
     <AppProvider>
-      <Routes />
+      <MenuProvider>
+        <Routes />
+      </MenuProvider>
     </AppProvider>
   </NavigationContainer>
 );
