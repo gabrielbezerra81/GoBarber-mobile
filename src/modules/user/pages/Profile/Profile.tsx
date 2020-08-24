@@ -4,7 +4,7 @@ import {
   Platform,
   Alert,
   TextInput,
-  Text,
+  StyleSheet,
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
@@ -12,7 +12,6 @@ import { Form } from "@unform/mobile";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
 
-// import ImagePicker from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
 
 import {
@@ -24,6 +23,7 @@ import {
   MenuContextProps,
 } from "react-native-popup-menu";
 
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "../../../../components/Button/Button";
 import Input from "../../../../components/Input/Input";
 
@@ -42,6 +42,7 @@ import api from "../../../../services/api";
 import { useAuth } from "../../../../context/authContext";
 
 import undefinedProfileImage from "../../../../assets/undefinedProfilePicture.png";
+import fonts from "../../../../fonts";
 
 interface ProfileFormData {
   name: string;
@@ -235,14 +236,35 @@ const Profile: React.FC<ProfileProps> = ({ ctx }) => {
             </AvatarIconContainer>
             <Menu name="imagePickerMenu">
               <MenuTrigger />
-              <MenuOptions>
-                <MenuOption onSelect={handleAvatarUpdateFromCamera}>
-                  <Text>Tirar uma foto</Text>
-                </MenuOption>
-                <MenuOption onSelect={handleAvatarUpdateFromGallery}>
-                  <Text>Escolher da galeria</Text>
-                </MenuOption>
-                <MenuOption text="Cancelar" />
+              <MenuOptions
+                customStyles={
+                  { OptionTouchableComponent: TouchableOpacity } as any
+                }
+                optionsContainerStyle={menuStyles.optionsContainer}
+              >
+                <MenuOption
+                  customStyles={{
+                    optionWrapper: menuStyles.optionWrapper,
+                    optionText: menuStyles.optionText,
+                  }}
+                  text="Tirar uma foto"
+                  onSelect={handleAvatarUpdateFromCamera}
+                />
+                <MenuOption
+                  onSelect={handleAvatarUpdateFromGallery}
+                  text="Escolher da galeria"
+                  customStyles={{
+                    optionWrapper: menuStyles.optionWrapper,
+                    optionText: menuStyles.optionText,
+                  }}
+                />
+                <MenuOption
+                  text="Cancelar"
+                  customStyles={{
+                    optionWrapper: menuStyles.optionWrapper,
+                    optionText: menuStyles.optionText,
+                  }}
+                />
               </MenuOptions>
             </Menu>
           </UserAvatarButton>
@@ -327,18 +349,19 @@ const Profile: React.FC<ProfileProps> = ({ ctx }) => {
 
 export default withMenuContext(Profile);
 
-const ImagePickerMenu = () => (
-  <Menu name="imagePickerMenu">
-    <MenuOptions>
-      <MenuOption onSelect={() => alert("Save")} text="Save" />
-      <MenuOption onSelect={() => alert("Delete")}>
-        <Text style={{ color: "red" }}>Delete</Text>
-      </MenuOption>
-      <MenuOption
-        onSelect={() => alert("Not called")}
-        disabled
-        text="Disabled"
-      />
-    </MenuOptions>
-  </Menu>
-);
+const menuStyles = StyleSheet.create({
+  optionsContainer: {
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: "#3E3B47",
+  },
+  optionWrapper: {
+    marginVertical: 5,
+    borderRadius: 10,
+  },
+  optionText: {
+    color: "#fff",
+    fontFamily: fonts.regular,
+    fontSize: 18,
+  },
+});

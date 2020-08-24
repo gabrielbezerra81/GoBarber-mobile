@@ -1,5 +1,6 @@
 import styled from "styled-components/native";
 import { Platform } from "react-native";
+import { MenuOptions } from "react-native-popup-menu";
 import fonts from "../../../../fonts";
 
 export const Container = styled.ScrollView.attrs({
@@ -49,4 +50,10 @@ export const AvatarIconContainer = styled.View`
   position: absolute;
   bottom: 0;
   right: 0;
+`;
+
+export const MenuOptionsContainer = styled.View`
+  background: #3e3b47;
+  border-radius: 10px;
+  overflow: hidden;
 `;
